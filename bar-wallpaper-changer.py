@@ -1,9 +1,5 @@
 #!/usr/bin/python3
 
-################################################################################
-# imports                                                                      #
-################################################################################
-
 import os
 import sys
 import time
@@ -13,19 +9,8 @@ import requests
 from bs4 import BeautifulSoup
 
 
-__version__ = '0.0.2'
+__version__ = '0.1.0'
 __author__ = 'arxel-sc'
-
-
-################################################################################
-# init logging                                                                 #
-################################################################################
-
-formatting = '%(asctime)s: %(levelname)s: in %(module)s: %(message)s'
-logging.basicConfig(filename=LOG_FILE, level=logging.INFO,
-                    format=formatting)
-logging.debug(LOG_FILE)
-logging.info(f'Starting version {__version__}')
 
 
 def get_website_info():
@@ -36,7 +21,8 @@ def get_website_info():
     return events
 
 
-def download_images():
+def download_images(events, PIC_DIR):
+    new_pics = []
     for event in events:
         image_url = event.find('img')['src']
         image_name = image_url.split('/')[-1]
@@ -46,6 +32,7 @@ def download_images():
                 r = requests.get(image_url, allow_redirects=True, verify=False)
                 pic.write(r.content)
                 logging.info(f'Downloaded {image_name} to pics folder!')
+    return new_pics
 
 
 def remove_old_pics(old, new):
@@ -58,15 +45,14 @@ def remove_old_pics(old, new):
             logging.info(f'Removed {element} from pics folder!')
 
 
-def set_wallpaper():
-    # os.system(f'feh --bg-scale {PIC_DIR}/{element}')
+def set_wallpaper(PIC_DIR, element, rotation_time=30):
     os.system(f"gsettings set org.gnome.desktop.background picture-uri file://{PIC_DIR}/{element}")
     os.system("gesettings set org.gnome.desktop.background picture-options 'scaled'")
     logging.info(f'Set new Wallpaper: {element}')
     time.sleep(rotation_time)
 
 
-def main():
+def main(new_pics, PIC_DIR):
     try:
         while True:
             number_of_pics = len(new_pics)
@@ -74,7 +60,10 @@ def main():
                 if n + 1 == number_of_pics:
                     break
                 else:
-                    set_wallpaper()
+                    try:
+                        set_wallpaper(PIC_DIR, element)
+                    except Exception as err:
+                        logging.error(err)
     except Exception as err:
         logging.error(err)
     finally:
@@ -100,9 +89,17 @@ if __name__ == '__main__':
     if not os.path.isdir(PIC_DIR):
         os.mkdir(PIC_DIR)
 
+    formatting = '%(asctime)s: %(levelname)s: in %(module)s: %(message)s'
+    logging.basicConfig(filename=LOG_FILE, level=logging.DEBUG,
+                        format=formatting)
+    logging.debug(LOG_FILE)
+    logging.info(f'Starting version {__version__}')
+
     old_pics = os.listdir(PIC_DIR)
-    new_pics = []
+
+    events = get_website_info()
+    new_pics = download_images(events, PIC_DIR)
 
     remove_old_pics(old_pics, new_pics)
-    main()
+    main(new_pics, PIC_DIR)
 
