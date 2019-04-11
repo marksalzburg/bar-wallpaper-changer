@@ -24,8 +24,8 @@ SHARE_DIR = os.path.join(HOME_FOLDER, '.local', 'share', 'MARK_bar_wallpaper')
 LOG_DIR = os.path.join(SHARE_DIR, 'logs')
 PIC_DIR = os.path.join(SHARE_DIR, 'pics')
 LOG_FILE = os.path.join(LOG_DIR, 'MARK_bar_wallpaper.log')
-# set timer to 3 minutes
-rotation_time = 3 * 60
+# set timer to 30 seconds
+rotation_time = 30
 
 try:
     if not os.path.isdir(SHARE_DIR):
@@ -56,7 +56,7 @@ logging.info(f'Starting version {__version__}')
 ################################################################################
 
 requests.packages.urllib3.disable_warnings()
-sitecontent = requests.get("https://www.marksalzburg.at") #, verify=False)
+sitecontent = requests.get("https://www.marksalzburg.at", verify=False)
 soup = BeautifulSoup(sitecontent.text, "html.parser")
 events = soup.find_all("div", "event-content")
 
@@ -100,9 +100,8 @@ try:
             if n + 1 == number_of_pics:
                 break
             else:
-                # os.system(f'feh --bg-scale {PIC_DIR}/{element}')
                 os.system(f"gsettings set org.gnome.desktop.background picture-uri file://{PIC_DIR}/{element}")
-                os.system("gesettings set org.gnome.desktop.background picture-options 'scaled'")
+                os.system("gsettings set org.gnome.desktop.background picture-options 'scaled'")
                 logging.debug(f'{n}, {element}')
                 logging.info(f'Set new Wallpaper: {element}')
             time.sleep(rotation_time)
