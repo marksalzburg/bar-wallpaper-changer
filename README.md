@@ -3,3 +3,6 @@ Small script to change the wallpaper on the pc at the bar to display current ads
 
 #### TODO
 + Implement log rotation
++ Show menu sometimes in pic rotation
++ How to pass the display env-var to gsettings?
++ Add special pictures like *Call for Artists* and such
