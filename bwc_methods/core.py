@@ -5,8 +5,8 @@ from . import display_core
 
 
 def main(PIC_DIR):
-
-    print('here')
+    events = web_core.get_website_info()
+    new_pics = web_core.download_images(events, PIC_DIR)
     return 0
 
 
@@ -40,3 +40,4 @@ def main(PIC_DIR):
 
 if __name__ == '__main__':
     pass
+

@@ -24,3 +24,7 @@ def download_images(events, PIC_DIR):
                 pic.write(r.content)
                 logging.info(f'Downloaded {image_name} to pics folder!')
     return new_pics
+
+if __name__ == '__main__':
+    pass
+
