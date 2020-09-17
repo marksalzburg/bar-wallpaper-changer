@@ -22,5 +22,8 @@ if __name__ == "__main__":
     logging.debug(LOG_FILE)
     logging.info(f"Starting version {__version__}")
 
+    # parse arguments
+    # read config
+
     bwc_methods.core.main(PIC_DIR)
 

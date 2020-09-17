@@ -10,3 +10,4 @@ def remove_old_pics(old, new):
         if element not in new:
             os.remove(os.path.join(PIC_DIR, element))
             logging.info(f'Removed {element} from pics folder!')
+
