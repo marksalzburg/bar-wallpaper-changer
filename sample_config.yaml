@@ -1,0 +1,6 @@
+KARTE:
+  - path: '/mnt'
+  - randomize: False
+WERBUNG:
+  - path: '/var/log'
+  - randomize: False
